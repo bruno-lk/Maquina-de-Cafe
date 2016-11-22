@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+// baseado nos codigos dessa fonta: http://www.devmedia.com.br/calculando-o-troco-em-uma-aplicacao-java/23617
+
 public class Bandeja {
 	// atriutos
 	String fileName = "C:/Users/Bruno/workspace/Cafe/src/troco/BD.txt"; // endereço da base de dados do troco
