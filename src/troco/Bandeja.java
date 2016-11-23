@@ -1,6 +1,7 @@
 package troco;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -30,17 +31,37 @@ public class Bandeja {
 			
 			arq.close();
 			
+		}catch (FileNotFoundException e) {
+			System.err.printf("Erro " + e.getMessage());
 		}catch (IOException e) {
 			System.err.printf("Erro na abertura do arquivo: %s.\n",e.getMessage());
 		}
 	}
 	
+	// TODO: função de alteração da base de dados
 	public int adiciona(int opcao, int qtd){
+		FileReader arq;
+		
 		this.vetorUnidades[opcao] += qtd;
+		
+		try {
+			arq = new FileReader(this.fileName);
+			BufferedReader lerArq = new BufferedReader(arq);			
+			
+			arq.close();
+			
+		} catch (FileNotFoundException e) {
+			System.err.printf("Erro " + e.getMessage());
+		} catch (IOException e) {
+			System.err.printf("Erro " + e.getMessage());
+		}	
+		
 		return this.vetorUnidades[opcao];
 	}
 	
+	// TODO: função de alteração da base de dados
 	public int retira(int opcao, int qtd){
+		
 		if(qtd <= this.vetorUnidades[opcao]){
 			this.vetorUnidades[opcao] -= qtd;
 			return this.vetorUnidades[opcao];
@@ -57,7 +78,7 @@ public class Bandeja {
 		System.out.printf("%d cedulas de 10 reais\n", vetor[4]);
 	}
 
-	public int[] exibe(double troco, int notas[], int centavos[], int vetorResult[]){
+	public int[] exibe(double troco, int vetorResult[]){
 		int valor, i = 0, ct;
 		// int vetorResult[] = new int[5]; // para calcular quanto sai da bandeja de troco 
 		
@@ -67,11 +88,11 @@ public class Bandeja {
 		// e é mais facil de calcular assim
 		
 		while (valor != 0){
-			ct = valor / notas[i]; // calculando a quantidade de notas
+			ct = valor / this.reais[i]; // calculando a quantidade de notas
 			if (ct != 0) {
-		           System.out.println(ct + " unidade(s) de R$ " + notas[i]);
+		           System.out.println(ct + " unidade(s) de R$ " + this.reais[i]);
 		           vetorResult[i+1] = ct;
-		           valor = valor % notas[i]; // sobra
+		           valor = valor % this.reais[i]; // sobra
 		        }
 			i++; //proxima nota 
 		}
@@ -81,11 +102,11 @@ public class Bandeja {
 	    i = 0;
 	    
 	    while (valor != 0) { // não é necessaria
-	    	ct = valor / centavos[i]; // calculando a qtde de moedas
+	    	ct = valor / this.centavos[i]; // calculando a qtde de moedas
 	    	if (ct != 0) {
-	    		System.out.println(ct +" unidade(s) de "+ centavos[i] + " centavo(s)");
+	    		System.out.println(ct +" unidade(s) de "+ this.centavos[i] + " centavo(s)");
 	        	vetorResult[i] = ct;
-	        	valor = valor % centavos[i]; // sobra
+	        	valor = valor % this.centavos[i]; // sobra
 	        }
 	        i++; // próximo centavo
 	    }
@@ -94,19 +115,18 @@ public class Bandeja {
 	    
 	}
 
-	public void verificaDisponibilidade(int[] vUnit, int[] vResult){
+	public void verificaDisponibilidade(int[] vResult){
 		int i;
 		
 		for(i=0;i<5;i++){
-			if(vUnit[i] < vResult[i]){
-				System.out.println("Não há troco disponivel na bandeja\n");
+			if(this.vetorUnidades[i] < vResult[i]){
+				System.out.println("\nNão há troco disponivel na bandeja");
 				return;
 			}
 		}
 		
 		for(i=0;i<5;i++){
-			vUnit[i] -= vResult[i];
+			this.vetorUnidades[i] -= vResult[i];
 		}
 	}
-
 }
