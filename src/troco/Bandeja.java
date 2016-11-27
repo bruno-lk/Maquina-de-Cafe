@@ -3,7 +3,9 @@ package troco;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 // baseado nos codigos dessa fonta: http://www.devmedia.com.br/calculando-o-troco-em-uma-aplicacao-java/23617
 
@@ -13,10 +15,12 @@ public class Bandeja {
 	int vetorUnidades[] = new int[5]; // [.50],[1],[2],[5],[10]
 	int reais[] = {10,5,2,1};
 	int centavos[] = {50};
-	int i = 0;
+	
 
 	// metodos
 	public void init(){
+		int i = 0;
+		
 		try{
 			FileReader arq = new FileReader(fileName);
 			BufferedReader lerArq = new BufferedReader(arq);
@@ -38,37 +42,22 @@ public class Bandeja {
 		}
 	}
 	
-	// TODO: função de alteração da base de dados
-	public int adiciona(int opcao, int qtd){
-		FileReader arq;
-		
-		this.vetorUnidades[opcao] += qtd;
-		
+	public void atualizaBD(int vetor[]){
 		try {
-			arq = new FileReader(this.fileName);
-			BufferedReader lerArq = new BufferedReader(arq);			
+			FileWriter arq = new FileWriter(this.fileName);
+			PrintWriter gravarArq = new PrintWriter(arq);
 			
+			for(int i = 0;i<5;i++){
+				gravarArq.println(vetor[i]);		
+			}
 			arq.close();
+
 			
-		} catch (FileNotFoundException e) {
-			System.err.printf("Erro " + e.getMessage());
 		} catch (IOException e) {
-			System.err.printf("Erro " + e.getMessage());
-		}	
-		
-		return this.vetorUnidades[opcao];
+			e.printStackTrace();
+		}
 	}
 	
-	// TODO: função de alteração da base de dados
-	public int retira(int opcao, int qtd){
-		
-		if(qtd <= this.vetorUnidades[opcao]){
-			this.vetorUnidades[opcao] -= qtd;
-			return this.vetorUnidades[opcao];
-		}
-		return -1;
-	}
-
 	public void mostraTrocos(int vetor[]){
 		
 		System.out.printf("%d moedas de 50 centavos\n", vetor[0]);
@@ -127,6 +116,7 @@ public class Bandeja {
 		
 		for(i=0;i<5;i++){
 			this.vetorUnidades[i] -= vResult[i];
+			atualizaBD(this.vetorUnidades);
 		}
 	}
 }

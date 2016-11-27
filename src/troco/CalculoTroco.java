@@ -14,7 +14,7 @@ public class CalculoTroco {
 //		mostraTrocos(bandeja.vetorUnidades);
 		
 		// inializa os valores p/ teste
-		recebido = 100;
+		recebido = 10;
 		conta = 2.5;
 		troco = 0;
 		
